@@ -6,9 +6,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/omni_alioth.mk
+    $(LOCAL_DIR)/twrp_alioth.mk
 
 COMMON_LUNCH_CHOICES := \
-    omni_alioth-user \
-    omni_alioth-userdebug \
-    omni_alioth-eng
+    twrp_alioth-user \
+    twrp_alioth-userdebug \
+    twrp_alioth-eng
