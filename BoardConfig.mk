@@ -172,3 +172,6 @@ SHRP_STATUSBAR_LEFT_PADDING := 48
 
 # enable python
 TW_INCLUDE_PYTHON := true
+
+# PBRP specific build flags
+PB_DISABLE_DEFAULT_DM_VERITY := true
