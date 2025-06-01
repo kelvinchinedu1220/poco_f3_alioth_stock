@@ -10,39 +10,39 @@ on:
       MANIFEST_BRANCH:
         description: 'MANIFEST_BRANCH'
         required: true
-        default: 'PLACEHOLDER'
+        default: 'shrp-12.1'
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
-        default: 'PLACEHOLDER'
+        default: 'https://github.com/kelvinchinedu1220/poco_f3_alioth_stock'
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
-        default: 'PLACEHOLDER'
+        default: 'shrp'
       DEVICE_PATH:
         description: 'DEVICE_PATH'
         required: true
-        default: 'PLACEHOLDER'
+        default: 'device/xiaomi/alioth'
       DEVICE_NAME:
         description: 'DEVICE_NAME'
         required: true
-        default: 'PLACEHOLDER'
+        default: 'alioth'
       MAKEFILE_NAME:
         description: 'MAKEFILE_NAME'
         required: true
-        default: 'PLACEHOLDER'
+        default: 'twrp_alioth'
       BUILD_TARGET:
         description: 'BUILD_TARGET'
         required: true
-        default: 'PLACEHOLDER'
+        default: 'boot'
       USER_NAME:
         description: 'Git Username'
         required: true
-        default: 'PLACEHOLDER'
+        default: 'kelvinchinedu1220'
       USER_EMAIL:
         description: 'Git Email'
         required: true
-        default: 'PLACEHOLDER'
+        default: 'pilosimon1990@gmail.com'
 
 jobs:
   build:
