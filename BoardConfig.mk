@@ -7,15 +7,6 @@
 
 DEVICE_PATH := device/xiaomi/alioth
 
-# A/B
-AB_OTA_UPDATER := true
-AB_OTA_PARTITIONS += \
-    system_ext \
-    vendor \
-    odm \
-    system \
-    product
-
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
@@ -121,7 +112,6 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 # Recovery
 BOARD_HAS_LARGE_FILESYSTEM := true
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-LC_ALL := C
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/twrp.flags
 
 # broken stuff
