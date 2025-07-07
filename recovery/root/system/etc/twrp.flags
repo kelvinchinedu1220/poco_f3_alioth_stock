@@ -28,8 +28,6 @@
 /product             ext4      /dev/block/mapper/product
 /system_ext_image	    emmc  	/dev/block/mapper/system_ext              flags=backup=1;flashimg=1;display="System_ext Image";wipeingui=1;slotselect
 /system_ext            ext4      /dev/block/mapper/system_ext
-/splash                  	emmc    /dev/block/bootdevice/by-name/splash                                 flags=backup=1;display="Splash";flashimg=1;wipeingui=1
-/splash                  	ext4    /dev/block/bootdevice/by-name/splash                                 flags=backup=1;display="Splash";flashimg=1;wipeingui=1
 /abl                  	ext4    /dev/block/bootdevice/by-name/abl                                 flags=backup=1;display="Abl";flashimg=1;wipeingui=1
 /featenabler                  	ext4    /dev/block/bootdevice/by-name/featenabler                                flags=backup=1;display="Featenabler";flashimg=1;wipeingui=1
 /featenabler                  	emmc    /dev/block/bootdevice/by-name/featenabler                                flags=backup=1;display="Featenabler";flashimg=1;wipeingui=1
