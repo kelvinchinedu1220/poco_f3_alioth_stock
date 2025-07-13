@@ -54,12 +54,20 @@ TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_CLANG_COMPILE := true
 BOARD_KERNEL_IMAGE_NAME := Image
-BOARD_BOOT_HEADER_VERSION := 3
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
 
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --vendor_cmdline $(VENDOR_CMDLINE)
 BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE) --board ""
+
+# header & cmdline
+ifeq ($(FOX_VENDOR_BOOT_RECOVERY),1)
+  BOARD_BOOT_HEADER_VERSION := 4
+  BOARD_MKBOOTIMG_ARGS += --vendor_cmdline "$(VENDOR_CMDLINE)"
+else
+  BOARD_KERNEL_CMDLINE := $(VENDOR_CMDLINE)
+  BOARD_BOOT_HEADER_VERSION := 3
+endif
 
 # Kenel dtb
 # BOARD_INCLUDE_DTB_IN_BOOTIMG := true
@@ -144,31 +152,23 @@ TW_NO_SCREEN_BLANK := true
 TW_EXCLUDE_APEX := true
 TW_SUPPORT_INPUT_AIDL_HAPTICS := true
 
-# Skyhawk Specific Flags
-SHRP_OFFICIAL := true
-SHRP_DEVICE_VERION := Nino_A14
-SHRP_PATH := device/xiaomi/alioth
-SHRP_MAINTAINER := Kelvin_Nino
-SHRP_DEVICE_CODE := alioth
-SHRP_REC_TYPE := Treble
-SHRP_DEVICE_TYPE := A/B
-SHRP_NOTCH := true
-SHRP_EDL_MODE := 1
-SHRP_HAS_FASTBOOT_BOOT := true
-SHRP_EXTERNAL := /external_sd
-SHRP_INTERNAL := /sdcard
-SHRP_OTG := /usb_otg
-SHRP_FLASH := 1
-SHRP_DARK := true
-SHRP_FLASHLIGHT_PATH := sys/devices/platform/flashlights_ocp8132/torch_brightness
-SHRP_REC := /dev/block/bootdevice/by-name/boot
-SHRP_DEVICE_CODE := alioth
-SHRP_EDL_MODE := 1
-SHRP_CUSTOM_FLASHLIGHT := true
-SHRP_FONP_1 := sys/devices/platform/flashlights_ocp8132/torch_brightness
-SHRP_FONP_2 := sys/devices/platform/flashlights_ocp8132/torch_brightness
-SHRP_STATUSBAR_RIGHT_PADDING := 48
-SHRP_STATUSBAR_LEFT_PADDING := 48
-
 # enable python
 TW_INCLUDE_PYTHON := true
+
+# vendor_boot as recovery?
+ifeq ($(FOX_VENDOR_BOOT_RECOVERY),1)
+  BOARD_USES_RECOVERY_AS_BOOT :=
+  BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE :=
+  BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+  BOARD_USES_GENERIC_KERNEL_IMAGE := true
+  BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
+  ifeq ($(BOARD_BOOT_HEADER_VERSION),4)
+      BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+  endif
+
+  ifneq ($(FOX_VENDOR_BOOT_RECOVERY_FULL_REFLASH),1)
+  # disable the reflash menu, until all vendor_boot ROMs have a v4 header - else it won't work
+      OF_NO_REFLASH_CURRENT_ORANGEFOX := 1
+  endif
+endif
+#
