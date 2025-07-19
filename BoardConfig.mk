@@ -1,29 +1,24 @@
 #
-# Copyright (C) 2025 The Android Open Source Project
-# Copyright (C) 2025 SebaUbuntu's TWRP device tree generator
-#
 # SPDX-License-Identifier: Apache-2.0
 #
-
-DEVICE_PATH := device/xiaomi/alioth
+# Copyright (C) 2022-2024 The OrangeFox Recovery Project
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 
 # Architecture
 TARGET_ARCH := arm64
-TARGET_ARCH_VARIANT := armv8-a
+TARGET_ARCH_VARIANT := armv8-2a
 TARGET_CPU_ABI := arm64-v8a
-TARGET_CPU_ABI2 := 
-TARGET_CPU_VARIANT := generic
-TARGET_CPU_VARIANT_RUNTIME := kryo300
+TARGET_CPU_ABI2 :=
+TARGET_CPU_VARIANT := cortex-a76
+TARGET_CPU_VARIANT_RUNTIME := kryo385
 
 TARGET_2ND_ARCH := arm
-TARGET_2ND_ARCH_VARIANT := armv7-a-neon
+TARGET_2ND_ARCH_VARIANT := armv8-2a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := generic
-TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a75
-
-# APEX
-DEXPREOPT_GENERATE_APEX_IMAGE := true
+TARGET_2ND_CPU_VARIANT := cortex-a55
+TARGET_2ND_CPU_VARIANT_RUNTIME := kryo385
 
 ENABLE_CPUSETS := true
 ENABLE_SCHEDBOOST := true
@@ -44,16 +39,27 @@ TARGET_BOARD_PLATFORM_GPU := qcom-adreno650
 QCOM_BOARD_PLATFORMS += xiaomi_sm8250
 BOARD_USES_QCOM_HARDWARE := true
 
+# asserts
+ifeq ($(PRODUCT_RELEASE_NAME),munch)
+   TARGET_OTA_ASSERT_DEVICE := munch
+   BOARD_RAMDISK_OFFSET := 0x02000000
+else
+   TARGET_OTA_ASSERT_DEVICE := alioth,aliothin
+   BOARD_RAMDISK_OFFSET := 0x01000000
+endif
+
 # Kernel
-TARGET_NO_KERNEL := false
-TARGET_FORCE_PREBUILT_KERNEL := true
+BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_BASE          := 0x00000000
+BOARD_KERNEL_TAGS_OFFSET   := 0x00000100
+BOARD_KERNEL_OFFSET        := 0x00008000
+BOARD_KERNEL_SECOND_OFFSET := 0x00f00000
+BOARD_DTB_OFFSET           := 0x01f00000
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_CLANG_COMPILE := true
 BOARD_KERNEL_IMAGE_NAME := Image
-BOARD_BOOT_HEADER_VERSION := 3
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
+BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 
 # cmdline
 VENDOR_CMDLINE := console=ttyMSM0,115200n8 androidboot.hardware=qcom androidboot.console=ttyMSM0 androidboot.memcg=1 lpm_levels.sleep_disabled=1 video=vfb:640x400,bpp=32,memsize=3072000
@@ -61,8 +67,13 @@ VENDOR_CMDLINE += msm_rtb.filter=0x237 service_locator.enable=1 androidboot.usbc
 VENDOR_CMDLINE += androidboot.selinux=permissive androidboot.init_fatal_reboot_target=recovery
 
 # header & cmdline
+ifeq ($(TW_VENDOR_BOOT_RECOVERY),1)
+  BOARD_BOOT_HEADER_VERSION := 4
+  BOARD_MKBOOTIMG_ARGS += --vendor_cmdline "$(VENDOR_CMDLINE)"
+else
   BOARD_KERNEL_CMDLINE := $(VENDOR_CMDLINE)
   BOARD_BOOT_HEADER_VERSION := 3
+endif
 
 # other mbootimg arguments
 BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
@@ -72,15 +83,28 @@ BOARD_MKBOOTIMG_ARGS += --kernel_offset $(BOARD_KERNEL_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --second_offset $(BOARD_KERNEL_SECOND_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
-BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE) --) --board ""
+BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE) --board ""
 
-# Kenel dtb
-# BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt//dtb.img
-BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
-
-# Kenel dtbo
-BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
+# Kernel
+# whether to do an inline build of the kernel sources [broken for vendor_boot targets]
+ifeq ($(TW_BUILD_FULL_KERNEL_SOURCES),1)
+    TARGET_KERNEL_SOURCE := kernel/xiaomi/$(PRODUCT_RELEASE_NAME)
+    TARGET_KERNEL_CONFIG := vendor/$(PRODUCT_RELEASE_NAME)-fox_defconfig
+    TARGET_KERNEL_CLANG_COMPILE := true
+    KERNEL_SUPPORTS_LLVM_TOOLS := true
+    TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-gnu-
+    # clang-r383902 = 11.0.1; clang-r416183b = 12.0.5; clang-r416183b1 = 12.0.7;
+    # clang_13.0.0 (proton-clang 13.0.0, symlinked into prebuilts/clang/host/linux-x86/clang_13.0.0); clang-13+ is needed for Arrow-12.1 kernel sources
+    TARGET_KERNEL_CLANG_VERSION := 13.0.0
+    TARGET_KERNEL_CLANG_PATH := $(shell pwd)/prebuilts/clang/host/linux-x86/clang-$(TARGET_KERNEL_CLANG_VERSION)
+    TARGET_KERNEL_ADDITIONAL_FLAGS := DTC_EXT=$(shell pwd)/prebuilts/misc/$(HOST_OS)-x86/dtc/dtc
+    LLVM := 1
+    LLVM_IAS := 1
+else
+    TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/prebuilt/kernel
+    BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/prebuilt/dtbo.img
+    BOARD_PREBUILT_DTBIMAGE := $(KERNEL_PATH)/prebuilt/dtb.img
+endif
 
 #A/B
 BOARD_USES_RECOVERY_AS_BOOT := true
@@ -125,18 +149,8 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 # Recovery
 BOARD_HAS_LARGE_FILESYSTEM := true
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/twrp.flags
-TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 LC_ALL := C
 
-# vendor_boot as recovery?
-  BOARD_USES_RECOVERY_AS_BOOT :=
-  BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE :=
-  BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-  BOARD_USES_GENERIC_KERNEL_IMAGE := true
-  BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
-  BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
-  
 # broken stuff
 ALLOW_MISSING_DEPENDENCIES := true
 BUILD_BROKEN_USES_NETWORK := true
@@ -169,3 +183,24 @@ TW_SUPPORT_INPUT_AIDL_HAPTICS := true
 
 # enable python
 TW_INCLUDE_PYTHON := true
+
+# unified script
+PRODUCT_COPY_FILES += $(DEVICE_PATH)/recovery/$(PRODUCT_RELEASE_NAME)/unified-script.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/unified-script.sh
+
+# vendor_boot as recovery?
+ifeq ($(TW_VENDOR_BOOT_RECOVERY),1)
+  BOARD_USES_RECOVERY_AS_BOOT :=
+  BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE :=
+  BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+  BOARD_USES_GENERIC_KERNEL_IMAGE := true
+  BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
+  ifeq ($(BOARD_BOOT_HEADER_VERSION),4)
+      BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+  endif
+
+  ifneq ($(TW_VENDOR_BOOT_RECOVERY_FULL_REFLASH),1)
+  # disable the reflash menu, until all vendor_boot ROMs have a v4 header - else it won't work
+      TW_NO_REFLASH_CURRENT_TWRP := true
+  endif
+endif
+#
