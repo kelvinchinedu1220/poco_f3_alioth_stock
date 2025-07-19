@@ -75,7 +75,7 @@ BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE) --board ""
 
 # Kenel dtb
 # BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt//dtb
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt//dtb.img
 BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
 
 # Kenel dtbo
