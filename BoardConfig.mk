@@ -103,7 +103,7 @@ ifeq ($(TW_BUILD_FULL_KERNEL_SOURCES),1)
 else
     TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/prebuilt/kernel
     BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/prebuilt/dtbo.img
-    BOARD_PREBUILT_DTBIMAGE := $(KERNEL_PATH)/prebuilt/dtb.img
+    BOARD_PREBUILT_DTBIMAGE := $(KERNEL_PATH)/prebuilt/dtb
 endif
 
 #A/B
