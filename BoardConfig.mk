@@ -61,13 +61,8 @@ VENDOR_CMDLINE += msm_rtb.filter=0x237 service_locator.enable=1 androidboot.usbc
 VENDOR_CMDLINE += androidboot.selinux=permissive androidboot.init_fatal_reboot_target=recovery
 
 # header & cmdline
-ifeq ($(TW_VENDOR_BOOT_RECOVERY),1)
-  BOARD_BOOT_HEADER_VERSION := 4
-  BOARD_MKBOOTIMG_ARGS += --vendor_cmdline "$(VENDOR_CMDLINE)"
-else
   BOARD_KERNEL_CMDLINE := $(VENDOR_CMDLINE)
   BOARD_BOOT_HEADER_VERSION := 3
-endif
 
 # other mbootimg arguments
 BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
