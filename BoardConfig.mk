@@ -106,7 +106,8 @@ ifeq ($(TW_BUILD_FULL_KERNEL_SOURCES),1)
     TARGET_KERNEL_ADDITIONAL_FLAGS := DTC_EXT=$(shell pwd)/prebuilts/misc/$(HOST_OS)-x86/dtc/dtc
     LLVM := 1
     LLVM_IAS := 1
-
+endif
+    
 #A/B
 BOARD_USES_RECOVERY_AS_BOOT := true
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
