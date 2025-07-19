@@ -101,9 +101,9 @@ ifeq ($(TW_BUILD_FULL_KERNEL_SOURCES),1)
     LLVM := 1
     LLVM_IAS := 1
 else
-    TARGET_PREBUILT_KERNEL := $(KERNEL_PATH)/prebuilt/kernel
-    BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/prebuilt/dtbo.img
-    BOARD_PREBUILT_DTBIMAGE := $(KERNEL_PATH)/prebuilt/dtb.img
+    TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
+    BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
+    BOARD_PREBUILT_DTBIMAGE := $(DEVICE_PATH)/prebuilt/dtb.img
 endif
 
 #A/B
