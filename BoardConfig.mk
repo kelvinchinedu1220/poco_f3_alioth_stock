@@ -181,19 +181,12 @@ TW_INCLUDE_PYTHON := true
 PRODUCT_COPY_FILES += $(DEVICE_PATH)/recovery/$(PRODUCT_RELEASE_NAME)/unified-script.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/unified-script.sh
 
 # vendor_boot as recovery?
-ifeq ($(TW_VENDOR_BOOT_RECOVERY),1)
   BOARD_USES_RECOVERY_AS_BOOT :=
   BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE :=
   BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
   BOARD_USES_GENERIC_KERNEL_IMAGE := true
   BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
-  ifeq ($(BOARD_BOOT_HEADER_VERSION),4)
-      BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
-  endif
+  BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
 
-  ifneq ($(TW_VENDOR_BOOT_RECOVERY_FULL_REFLASH),1)
-  # disable the reflash menu, until all vendor_boot ROMs have a v4 header - else it won't work
-      OF_NO_REFLASH_CURRENT_TWRP := true
-  endif
-endif
-#
+TW_VENDOR_BOOT_RECOVERY_FULL_REFLASH =: true
+      TW_NO_REFLASH_CURRENT_TWRP := true
