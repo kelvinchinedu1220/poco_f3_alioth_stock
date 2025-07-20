@@ -143,10 +143,10 @@ TARGET_USES_MKE2FS := true
 TW_NO_SCREEN_BLANK := true
 TW_EXCLUDE_APEX := true
 TW_SUPPORT_INPUT_AIDL_HAPTICS := true
-
+TW_DEVICE_VERSION := android_16
 # Skyhawk Specific Flags
 SHRP_OFFICIAL := true
-SHRP_DEVICE_VERION := Nino_A14
+SHRP_DEVICE_VERION := android_16
 SHRP_PATH := device/xiaomi/alioth
 SHRP_MAINTAINER := Kelvin_Nino
 SHRP_DEVICE_CODE := alioth
@@ -159,7 +159,7 @@ SHRP_EXTERNAL := /external_sd
 SHRP_INTERNAL := /sdcard
 SHRP_OTG := /usb_otg
 SHRP_FLASH := 1
-SHRP_DARK := true
+SHRP_DARK := false
 SHRP_FLASHLIGHT_PATH := sys/devices/platform/flashlights_ocp8132/torch_brightness
 SHRP_REC := /dev/block/bootdevice/by-name/boot
 SHRP_DEVICE_CODE := alioth
