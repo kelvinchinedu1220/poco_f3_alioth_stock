@@ -59,13 +59,7 @@ TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 TARGET_KERNEL_CLANG_COMPILE := true
 BOARD_KERNEL_IMAGE_NAME := Image
-#BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-
-# prebuilt kernel
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
-
-# Dtbo
-BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
+BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 
 # Dtb
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
@@ -74,15 +68,6 @@ TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 VENDOR_CMDLINE := console=ttyMSM0,115200n8 androidboot.hardware=qcom androidboot.console=ttyMSM0 androidboot.memcg=1 lpm_levels.sleep_disabled=1 video=vfb:640x400,bpp=32,memsize=3072000
 VENDOR_CMDLINE += msm_rtb.filter=0x237 service_locator.enable=1 androidboot.usbcontroller=a600000.dwc3 swiotlb=2048 loop.max_part=7 cgroup.memory=nokmem,nosocket reboot=panic_warm
 VENDOR_CMDLINE += androidboot.selinux=permissive androidboot.init_fatal_reboot_target=recovery
-
-# header & cmdline
-ifeq ($(TW_VENDOR_BOOT_RECOVERY),1)
-  BOARD_BOOT_HEADER_VERSION := 4
-  BOARD_MKBOOTIMG_ARGS += --vendor_cmdline "$(VENDOR_CMDLINE)"
-else
-  BOARD_KERNEL_CMDLINE := $(VENDOR_CMDLINE)
-  BOARD_BOOT_HEADER_VERSION := 3
-endif
 
 # other mbootimg arguments
 BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
@@ -153,9 +138,16 @@ TARGET_COPY_OUT_VENDOR := vendor
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 
 # Recovery
+TARGET_NO_RECOVERY := true
 BOARD_HAS_LARGE_FILESYSTEM := true
-TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-LC_ALL := C
+BOARD_HAS_NO_SELECT_BUTTON := true
+BOARD_SUPPRESS_SECURE_ERASE := true
+BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
+BOARD_USES_GENERIC_KERNEL_IMAGE := true
+BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 
 # broken stuff
 ALLOW_MISSING_DEPENDENCIES := true
@@ -192,21 +184,3 @@ TW_INCLUDE_PYTHON := true
 
 # unified script
 PRODUCT_COPY_FILES += $(DEVICE_PATH)/recovery/$(PRODUCT_RELEASE_NAME)/unified-script.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/unified-script.sh
-
-# vendor_boot as recovery?
-ifeq ($(TW_VENDOR_BOOT_RECOVERY),1)
-  BOARD_USES_RECOVERY_AS_BOOT :=
-  BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE :=
-  BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-  BOARD_USES_GENERIC_KERNEL_IMAGE := true
-  BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
-  ifeq ($(BOARD_BOOT_HEADER_VERSION),4)
-      BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
-  endif
-
-  ifneq ($(TW_VENDOR_BOOT_RECOVERY_FULL_REFLASH),1)
-  # disable the reflash menu, until all vendor_boot ROMs have a v4 header - else it won't work
-      TW_NO_REFLASH_CURRENT_TWRP := true
-  endif
-endif
-#
