@@ -94,7 +94,7 @@ BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE) --board ""
 BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
-BOARD_MKBOOTIMG_ARGS += --recovery_dtbo $(TARGET_PREBUILT_DTBOIMAGE)
+BOARD_MKBOOTIMG_ARGS += --dtbo $(TARGET_PREBUILT_DTBOIMAGE)
 
 # Kernel
 # whether to do an inline build of the kernel sources [broken for vendor_boot targets]
