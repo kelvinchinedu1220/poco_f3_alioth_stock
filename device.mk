@@ -103,6 +103,8 @@ TW_EXTRA_LANGUAGES := true
 TW_INCLUDE_NTFS_3G := true
 TW_USE_TOOLBOX := true
 TW_INCLUDE_RESETPROP := true
+TW_EXCLUDE_ENCRYPTED_BACKUPS := false
+TW_INCLUDE_ENCRYPTED_BACKUP := true
 TW_INCLUDE_REPACKTOOLS := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_BRIGHTNESS_PATH := "/sys/class/backlight/panel0-backlight/brightness"
@@ -121,8 +123,10 @@ PB_DEVICE_VERSION := NINO
 TW_HAS_EDL_MODE := true
 PB_HAS_EDL_MODE := true
 TW_INCLUDE_FASTBOOTD := true
+
 #TW_OVERRIDE_SYSTEM_PROPS := \
 #    "ro.bootimage.build.date.utc=ro.build.date.utc;ro.build.date.utc;ro.odm.build.date.utc=ro.build.date.utc;ro.product.build.date.utc=ro.build.date.utc;ro.system.build.date.utc=ro.build.date.utc;ro.system_ext.build.date.utc=ro.build.date.utc;ro.vendor.build.date.utc=ro.build.date.utc;ro.build.product;ro.build.fingerprint=ro.system.build.fingerprint;ro.build.version.incremental;ro.product.name=ro.product.system.name"
+
 
 # Crypto
 TW_INCLUDE_CRYPTO := true
