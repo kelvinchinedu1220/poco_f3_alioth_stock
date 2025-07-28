@@ -125,6 +125,9 @@ PB_HAS_EDL_MODE := true
 TW_INCLUDE_FASTBOOTD := true
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_BACKUP_EXCLUSIONS := /data/fonts
+TW_DEFAULT_EXTERNAL_STORAGE := true
+#TW_INTERNAL_STORAGE_PATH := "/data/media"
+#TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
 
 #TW_OVERRIDE_SYSTEM_PROPS := \
 #    "ro.bootimage.build.date.utc=ro.build.date.utc;ro.build.date.utc;ro.odm.build.date.utc=ro.build.date.utc;ro.product.build.date.utc=ro.build.date.utc;ro.system.build.date.utc=ro.build.date.utc;ro.system_ext.build.date.utc=ro.build.date.utc;ro.vendor.build.date.utc=ro.build.date.utc;ro.build.product;ro.build.fingerprint=ro.system.build.fingerprint;ro.build.version.incremental;ro.product.name=ro.product.system.name"
