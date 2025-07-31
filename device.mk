@@ -28,9 +28,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 
 LOCAL_PATH := device/xiaomi/alioth
 
-# API
-PRODUCT_SHIPPING_API_LEVEL := 31
-
 # A/B
 ENABLE_VIRTUAL_AB := true
 AB_OTA_UPDATER := true
